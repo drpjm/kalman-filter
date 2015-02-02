@@ -12,9 +12,22 @@
 
 ; This code will follow the Linear Kalman Filter from http://greg.czerniak.info/guides/kalman1/
 
-(defn linear-kalman-filter [A B H x-init P Q R]
-  {:pre [(and (mat/matrix? A) (mat/matrix? B)
-              (mat/matrix? H) (mat/matrix? x-init)
-              (mat/matrix? P) (mat/matrix? Q) (mat/matrix? R))]}
-  "An implementation of the linear Kalman filter for any n-dimensional system."
-  (mat/pm A))
+(defn linear-kalman-filter [A B H Q R]
+  ; TODO: Need better pre-conditions.
+  #_{:pre [(and (mat/matrix? A) (mat/matrix? B)
+               (mat/matrix? H) (mat/matrix? Q) (mat/matrix? R))]}
+  "An implementation of the linear Kalman filter for any n-dimensional system. Returns a function
+that depends on the current state of a system (x), its covariance matrix (P), given control vector (u),
+and sensor measurement (z)."
+  (fn [x P u z]
+    (def I (mat/identity-matrix (mat/dimensionality A)))
+    (let [xpred (mat/add (mat/mmul A x) (mat/mmul B u))
+          Ppred (mat/mmul A P (mat/transpose A))
+          y (mat/sub z (mat/mmul H xpred))
+          S (mat/add (mat/mmul H Ppred (mat/transpose H)) R)
+          K (mat/mmul Ppred (mat/transpose H) (mat/inverse S))]
+      {:state (mat/add xpred (mat/mmul K y))
+       :covar-matrix (mat/mmul (mat/sub I (mat/mmul K H)) Ppred)})))
+
+; Invoke the linear kalman filter function to enclose the matrix variables. Only u and z are exposed and a map with
+; the current state and updated covariance matrix is returned.

@@ -19,7 +19,7 @@
       H (mat/matrix [1])
       Q (mat/matrix [0.0001])
       R (mat/matrix [0.1])
-      voltage-update-fn (linear-kalman-filter A B H Q R)]
+      voltage-update-fn (lkf/linear-kalman-filter A B H Q R)]
   ; Store the results for plotting.
   (let [steps 100
         real-battery-vs (repeat steps 1.25)

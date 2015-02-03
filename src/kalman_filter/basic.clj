@@ -20,12 +20,12 @@
 that depends on the current state of a system (x), its covariance matrix (P), given control vector (u),
 and sensor measurement (z)."
   (fn [x P u z]
-    (def I (mat/identity-matrix (mat/dimensionality A)))
     (let [xpred (mat/add (mat/mmul A x) (mat/mmul B u))
           Ppred (mat/mmul A P (mat/transpose A))
           y (mat/sub z (mat/mmul H xpred))
           S (mat/add (mat/mmul H Ppred (mat/transpose H)) R)
-          K (mat/mmul Ppred (mat/transpose H) (mat/inverse S))]
+          K (mat/mmul Ppred (mat/transpose H) (mat/inverse S))
+          I (mat/identity-matrix (mat/dimension-count A 0))]
       {:state (mat/add xpred (mat/mmul K y))
        :covar-matrix (mat/mmul (mat/sub I (mat/mmul K H)) Ppred)})))
 

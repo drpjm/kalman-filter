@@ -1,5 +1,5 @@
 (ns kalman-filter.basic-test
-  (:require [kalman-filter.basic :as lkf]
+  (:require [kalman-filter.basic :as kf]
             [clojure.core.matrix :as mat]
             [incanter.core :as incanter]
             [incanter.stats :as stats]
@@ -20,7 +20,7 @@
        H (mat/matrix [1])
        Q (mat/matrix [0.0001])
        R (mat/matrix [0.1])
-       voltage-update-fn (lkf/linear-kalman-filter A B H Q R)]
+       voltage-update-fn (kf/linear-kalman-filter A B H Q R)]
    ; Store the results for plotting.
    (let [measure-battery (fn [n]
                            (stats/sample-normal n :mean real-voltage :std 0.1))

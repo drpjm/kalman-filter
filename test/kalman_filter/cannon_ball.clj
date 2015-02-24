@@ -1,5 +1,5 @@
 (ns kalman-filter.cannon-ball
-  (:require [kalman-filter.basic :as lkf]
+  (:require [kalman-filter.basic :as kf]
             [clojure.core.matrix :as mat]
             [incanter.core :as incanter]
             [incanter.stats :as stats]
@@ -72,7 +72,7 @@
                      [0   0.1 0   0  ]
                      [0   0   0.1 0  ]
                      [0   0   0   0.1]])
-      loc-update-fn (lkf/linear-kalman-filter A B H Q R)]
+      loc-update-fn (kf/linear-kalman-filter A B H Q R)]
   ; Store the results for plotting.
   (let [steps 150
         estimated-states (:state (loop [idx 0
